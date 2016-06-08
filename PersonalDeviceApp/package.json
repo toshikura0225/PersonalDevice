@@ -1,0 +1,10 @@
+{
+  "name": "personal-device-app",
+  "version": "0.0.0",
+  "description": "PersonalDeviceApp",
+  "main": "server.js",
+  "author": {
+    "name": "T811009",
+    "email": ""
+  }
+}
