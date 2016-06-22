@@ -56,7 +56,7 @@
 
 			my_interval = setInterval(function () {
 				debug2();
-			}, 3000);
+			}, 1500);
 
 
 		}
@@ -82,23 +82,15 @@ socket.emit('msg', "andoooo");
 
 <body>
 
-
-	<p>測定温度<p>
-		<div id="idPV">23.4</div>
-		<input type="text" size="20" id="idPortName" />
-		<br /><br />
-
-	<p>「接続」→「Open SerialPort」→「write」</p>
-
-	<button id="idConnect" onclick="ConnectRks()">接続</button>
-
-	<hr />
-
+	<button id="idConnect" onclick="ConnectRks()">接続</button><br />
+	COMポート：<input type="text" size="20" id="idPortName" /><br />
 	<button onclick="debug1()">Open SerialPort</button><br />
-	<button onclick="debug2()">write()</button><br />
-	<button onclick="debug3()">start()</button><br />
-	<button onclick="debug4()">stop()</button><br />
-	<div id="idReceived"></div>
+	<button onclick="debug2()">シリアルデータ送信</button>
+	<button onclick="debug3()">定期送信開始</button>
+	<button onclick="debug4()">定期送信終了</button><br />
+	受信データ
+	<div id="idReceived"></div><br />
+	<hr />	
 
 
 
