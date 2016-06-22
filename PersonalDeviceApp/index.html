@@ -16,54 +16,53 @@
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 	<!--<script src="script.js" type="text/javascript"></script>-->
 	<script type="text/javascript">
-var socket;
-$(function() {
+		var socket;
+		$(function () {
 
-});
+		});
 
-// ①RKSに接続
-function ConnectRks() {
-// サーバーに接続
-socket = io.connect();
+		// ①RKSに接続
+		function ConnectRks() {
+			// サーバーに接続
+			socket = io.connect();
 
-// メッセージ受信イベント（PVを受信）
-socket.on('response', function(data)
-{
-//var a = data[0];
-//var b = String.fromCharCode.apply("", new Uint8Array(data));
-var arr_data = new Uint8Array(data);
-//$('#idPV').text(b);
-$('#idReceived').prepend(arr_data + '<br/>');		// デバッグ用に書き出し
-});
+			// メッセージ受信イベント（PVを受信）
+			socket.on('response', function (data) {
+				//var a = data[0];
+				//var b = String.fromCharCode.apply("", new Uint8Array(data));
+				var arr_data = new Uint8Array(data);
+				//$('#idPV').text(b);
+				$('#idReceived').prepend(arr_data + '<br/>');		// デバッグ用に書き出し
+			});
 
-}
-
+		}
 
 
-function debug1() {
-socket.emit('open-connection', $('#idPortName').val());
-}
 
-function debug2() {
-// 配列形式で送信する
-var url = [4, 48, 48, 90, 87, 5];
+		function debug1() {
+			socket.emit('open-connection', $('#idPortName').val());
+		}
 
-socket.emit('path-through', url);
-}
+		function debug2() {
+			// 配列形式で送信する
+			var url = [4, 48, 48, 90, 87, 5];
 
-var my_interval;
+			socket.emit('path-through', url);
+		}
 
-function debug3() {
+		var my_interval;
 
-my_interval = setInterval(function() {
-debug2();
-}, 3000);
+		function debug3() {
+
+			my_interval = setInterval(function () {
+				debug2();
+			}, 3000);
 
 
-}
-function debug4() {
-clearInterval(my_interval);
-}
+		}
+		function debug4() {
+			clearInterval(my_interval);
+		}
 /*
 // send message
 function sendSignal()
