@@ -6,6 +6,7 @@ var serialport = require('serialport');
 
 // ■■■■■■■■　Node.js　■■■■■■■■■
 var http_src = fs.readFileSync('./index.html');		// HTMLファイルのソースを同期処理で読み出す
+var js_src = fs.readFileSync('./script.js');
 
 // HTTPサーバーを作成
 var app = http.createServer(function (req, res) {
@@ -18,6 +19,12 @@ var app = http.createServer(function (req, res) {
 	if (url_parts.pathname == '/' || url_parts.pathname == '/index.html') {
 		res.writeHead(200, { 'Content-Type': 'text/html' });
 		res.write(http_src);
+		res.end();
+	}
+
+	else if (url_parts.pathname == '/script.js') {
+		res.writeHead(200, { 'Content-Type': 'text/javascript' });
+		res.write(js_src);
 		res.end();
 	}
 	
@@ -55,7 +62,7 @@ io.sockets.on('connection', function (socket) {
 		
 		// シリアルポートのインスタンスを作成する
 		sp = new serialport.SerialPort(data, {
-			baudRate: 38400,
+			baudRate: 9600,
 			dataBits: 8,
 			parity: 'none',
 			stopBits: 1,
