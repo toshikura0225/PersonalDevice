@@ -52,6 +52,11 @@ function debug4() {
 	clearInterval(my_interval);
 }
 
+function debug5()
+{
+	socket.emit('worst_command',
+		"C:\\Users\\Toshihiro\\Desktop\\PersonalDevice\\PersonalDeviceApp\\131106_ConnectionSupporter.exe");
+}
 
 
 // Orion通信プロトコルクラス

@@ -90,7 +90,7 @@ io.sockets.on('connection', function (socket) {
 	});
 	
 	// クライアントからシリアルデータの送信要求イベントに対するハンドラ
-	socket.on('path-through', function (data) {
+	socket.on('path-through', (data) => {
 		
 		console.log();
 		console.log("socket.io received 'path-through' event and '" + data + "' message from html");
@@ -113,6 +113,23 @@ io.sockets.on('connection', function (socket) {
 		});
 	})
 	
+	// コマンドライン操作（セキュリティ最低...）
+	const exec = require('child_process').exec;
+	
+	socket.on('worst_command', (data) => {
+		console.log("worst_command received! =>" + data);
+		exec(data,
+		{cwd: 'C:\\Users\\Toshihiro\\Desktop\\PersonalDevice\\PersonalDeviceApp'},
+		(error, stdout, stderr) => {
+		if (error) {
+			console.error(`exec error: ${error}`);
+			return;
+		}
+		console.log(`stdout: ${stdout}`);
+		console.log(`stderr: ${stderr}`);
+		});
+
+	});
 	
 	
 	// ～～～～～　OLDコード　～～～～～
