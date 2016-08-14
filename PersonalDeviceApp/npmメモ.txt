@@ -1,0 +1,2 @@
+モジュールの最新版を表示する：npm view module_name version
+ver1.2.3のserialportをインストールする：npm install -g serialport@1.2.3
