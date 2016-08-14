@@ -61,7 +61,7 @@ io.sockets.on('connection', function (socket) {
 		console.log("socket.io received 'open-connection' event and '" + data + "' message from html");
 		
 		// シリアルポートのインスタンスを作成する
-		sp = new serialport.SerialPort(data, {
+		sp = new serialport(data, {
 			baudRate: 9600,
 			dataBits: 8,
 			parity: 'none',
