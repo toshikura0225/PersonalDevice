@@ -119,7 +119,7 @@ io.sockets.on('connection', function (socket) {
 	socket.on('worst_command', (data) => {
 		console.log("worst_command received! =>" + data);
 		exec(data,
-		{cwd: 'C:\\Users\\Toshihiro\\Desktop\\PersonalDevice\\PersonalDeviceApp'},
+		//{cwd: 'C:\\Users\\Toshihiro\\Desktop\\PersonalDevice\\PersonalDeviceApp'},
 		(error, stdout, stderr) => {
 		if (error) {
 			console.error(`exec error: ${error}`);
