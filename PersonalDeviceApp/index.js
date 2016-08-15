@@ -37,8 +37,6 @@ var app = http.createServer(function (req, res) {
 
 }).listen(process.env.PORT || 3000);	// サーバー内環境のポートまたは3000番で待受
 
-// シリアルポートのインスタンス
-var sp;
 
 // ■■■■■■■■　socket.io（サーバー側）　■■■■■■■■■
 var io = require('socket.io').listen(app);
@@ -55,149 +53,17 @@ io.sockets.on('connection', function (socket) {
 	});
 	*/
 	
-	// 接続開始時のイベントハンドラを定義
-	socket.on('open-connection', function (data) {
-		
-		console.log("socket.io received 'open-connection' event and '" + data + "' message from html");
-		
-		// シリアルポートのインスタンスを作成する
-		sp = new serialport(data, {
-			baudRate: 9600,
-			dataBits: 8,
-			parity: 'none',
-			stopBits: 1,
-			flowControl: true,
-		});
-		
-		// 受信イベントハンドラを定義
-		sp.on('data', function (recv) {
-			console.log('recv:' + recv);
-			
-			// 受信データをファイルに書き出し
-			fs.appendFile('zw.csv', recv, 'utf8', function (err) {
-				if (!err) {
-					fs.appendFileSync('zw.csv', '\n', 'utf8');
-				} else {
-					console.log('recv_err:' + err);
-				}
-			});
-			
-			// 受信データをHTMLへ送信
-			socket.emit('response', recv);
-			
-		});
-		
-	});
-	
 	// クライアントからシリアルデータの送信要求イベントに対するハンドラ
 	socket.on('path-through', (data) => {
 		
 		console.log();
 		console.log("socket.io received 'path-through' event and '" + data + "' message from html");
 		
-		// シリアルデータを送信
-		sp.write(data, function (err, results) {
-			if (!err) {	// エラーなし
-				console.log(results + ' bytes written');
-			} else {		// エラーあり
-				console.log("error : " + err + "  " + results);
-			}
-		});
-	});
-	
-	
-	// 使用可能なCOMポートを書き出す
-	serialport.list(function (err, ports) {
-		ports.forEach(function (port) {
-			console.log(port.comName);
-		});
-	})
-	
-	// コマンドライン操作（セキュリティ最低...）
-	const exec = require('child_process').exec;
-	
-	socket.on('worst_command', (data) => {
-		console.log("worst_command received! =>" + data);
-		exec(data,
-		//{cwd: 'C:\\Users\\Toshihiro\\Desktop\\PersonalDevice\\PersonalDeviceApp'},
-		(error, stdout, stderr) => {
-		if (error) {
-			console.error(`exec error: ${error}`);
-			return;
-		}
-		console.log(`stdout: ${stdout}`);
-		console.log(`stderr: ${stderr}`);
-		});
-
-	});
-	
-	
-	// ～～～～～　OLDコード　～～～～～
-	
-	// python実行のためのchild_processを作成
-	var spawn = require('child_process').spawn;
-	
-	socket.on('old_path-through', function (data) {
-		
-		console.log();
-		console.log("socket.io received 'path-through' event and '" + data + "' message from html");
-		
-		// pythonを実行
-		var py = spawn('python', ['zw.py', data]);
-		console.log("var py = spawn('python', ['zw.py', data]);");
-		
-		// pythonからの受信イベントを登録
-		py.stdout.on('data', function (data) {
-			console.log("py.stdout.on('data', ... " + data);
-			//socket.broadcast.emit('response', data);
-			socket.emit('response', data);
-		});
-		
-		// pythonからエラーイベントを受信時
-		py.stderr.on('data', function (data) {
-			console.log('stderr: ' + data);
-		});
-		
-		py.on('exit', function () {
-			console.log("exit event");
-		});
-	});
-	
-	socket.on('abc', function (data) {
-		
-		console.log();
-		console.log("socket.io received 'abc' event and '" + data + "' message from html");
-		
-		// pythonを実行
-		var py = spawn('python', ['test.py', 'my_arg']);
-		console.log("var py = spawn('python', ['test.py']);");
-		
-		// pythonからの受信イベントを登録
-		py.stdout.on('data', function (data) {
-			console.log("py.stdout.on('data', ... " + data);
-		});
-		
-		// pythonからエラーイベントを受信時
-		py.stderr.on('data', function (data) {
-			console.log('stderr: ' + data);
-		});
-		
-		py.on('exit', function () {
-			console.log("exit event");
-		});
-	});
+		// 受信データをHTMLへ送信
+		//socket.broadcast.emit('path-through', data);
+		socket.emit('path-through', data);
+	});	
 	
 	
 });
 
-// ■■■■■■■■　socket.io-client（クライアント側）　■■■■■■■■■
-var client = require('socket.io-client');
-var cli_socket = client.connect('http://localhost:3000');
-cli_socket.on('connect', function (socket) {
-	cli_socket.send('how are you?');
-	cli_socket.on('msg', function (data) {
-		//cli_socket.emit('abc', "thank you");
-		console.log('to client' + data);
-	});
-});
-console.log('Server running!');
