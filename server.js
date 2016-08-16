@@ -2,49 +2,67 @@ var http = require('http');
 var fs = require('fs');
 var url = require('url');
 
-var http_src = fs.readFileSync('./index.html');
-var js_src = fs.readFileSync('./js/my_script.js');
 
-var rasp_src= fs.readFileSync('./rasp.html');
-var ando_src= fs.readFileSync('./ando.html');
+// ■■■■■■■■　Node.js　■■■■■■■■■
+var http_src = fs.readFileSync('./index.html');		// HTMLファイルのソースを同期処理で読み出す
+var js_src = fs.readFileSync('./script.js');
 
-var app = http.createServer(function(req, res) {
+// HTTPサーバーを作成
+var app = http.createServer(function (req, res) {
 	
+	// リクエストされたURLを取得
 	var url_parts = url.parse(req.url);
-	
 	console.log(url_parts.pathname);
 	
-	if(url_parts.pathname == '/')
-	{
-		res.writeHead(200, {'Content-Type': 'text/html'});
+	// ルートまたはindex.htmlの場合
+	if (url_parts.pathname == '/' || url_parts.pathname == '/index.html') {
+		res.writeHead(200, { 'Content-Type': 'text/html' });
 		res.write(http_src);
 		res.end();
 	}
-	else if(url_parts.pathname == '/js/my_script.js')
-	{
-		res.writeHead(200, {'Content-Type': 'text/javascript'});
+
+	else if (url_parts.pathname == '/script.js') {
+		res.writeHead(200, { 'Content-Type': 'text/javascript' });
 		res.write(js_src);
 		res.end();
 	}
-	else if(url_parts.pathname == '/rasp.html')
-	{
-		res.writeHead(200, {'Content-Type': 'text/html'});
-		res.write(rasp_src);
-		res.end();
-	}
-	else if(url_parts.pathname == '/ando.html')
-	{
-		res.writeHead(200, {'Content-Type': 'text/html'});
-		res.write(ando_src);
-		res.end();
-	}
 	
-}).listen(process.env.PORT || 3000);
+	// その他のファイルは404コードを返答する
+	else {
+		res.writeHead(404);
+		res.write(url_parts.pathname + "not found.");	// 脆弱性
+		res.end();
+	}
 
+}).listen(process.env.PORT || 3000);	// サーバー内環境のポートまたは3000番で待受
+
+
+// ■■■■■■■■　socket.io（サーバー側）　■■■■■■■■■
 var io = require('socket.io').listen(app);
-io.sockets.on('connection', function(socket) {
-  socket.on('msg', function(data) {
+io.sockets.on('connection', function (socket) {
+	
+	// なぜか.htmlにアクセス時に'connection'イベントが発生する（原因不明）
+	console.log("socket.io connected.");
+	
+	/*
+	socket.on('message', function(data) {		// messageイベント：すべてのメッセージを受信時
     //io.sockets.emit('msg', data);
-	socket.broadcast.emit('msg', data);
-  });
+		socket.broadcast.emit('msg', data);
+		console.log("to server msg" + data);
+	});
+	*/
+	
+	// クライアントからシリアルデータの送信要求イベントに対するハンドラ
+	socket.on('path-through', (data) => {
+		
+		console.log();
+		console.log("socket.io received 'path-through' event and '" + data + "' message from html");
+		
+		// 受信データをHTMLへ送信
+		//socket.broadcast.emit('path-through', data);
+		socket.emit('path-through', data);
+	});	
+	
+	
 });
+
