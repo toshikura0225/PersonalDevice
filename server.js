@@ -50,8 +50,15 @@ var app = http.createServer(function(req, res) {
 
 var io = require('socket.io').listen(app);
 io.sockets.on('connection', function(socket) {
+	// なぜか.htmlにアクセス時に'connection'イベントが発生する（原因不明）
+	console.log("socket.io connected.");
+	
   socket.on('path-through', function(data) {
-    //io.sockets.emit('msg', data);
-	socket.broadcast.emit('path-through', data);
+    console.log();
+		console.log("socket.io received 'path-through' event and '" + data + "' message from html");
+		
+		// 受信データをHTMLへ送信
+		//socket.broadcast.emit('path-through', data);
+		socket.emit('path-through', data);
   });
 });
