@@ -45,7 +45,7 @@ io.sockets.on('connection', function(socket) {
 		console.log("socket.io received 'path-through' event and '" + data + "' message from html");
 
 		// 受信データをHTMLへ送信
-		//socket.broadcast.emit('path-through', data);	// 送信元以外に応答
-		socket.emit('path-through', data);
+		socket.broadcast.emit('path-through', data);	// 送信元以外に応答
+		//socket.emit('path-through', data);
 	});
 });
