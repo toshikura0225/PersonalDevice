@@ -27,7 +27,7 @@ var app = http.createServer(function(req, res) {
 		res.write(js_src);
 		res.end();
 	}
-	else if(url_parts.pathname == '/script.js')
+	else if(url_parts.pathname == '/mys.js')
 	{
 		res.writeHead(200, {'Content-Type': 'text/javascript'});
 		res.write(js_2);
