@@ -58,8 +58,7 @@ io.sockets.on('connection', function (socket) {
 	// 接続開始時のイベントハンドラを定義
 	socket.on('open-connection', function (data) {
 		
-		console.log("socket.io received 'open-connection' event and '" + data + "' message from html");
-		
+		   
 		// シリアルポートのインスタンスを作成する
 		sp = new serialport(data, {
 			baudRate: 9600,
@@ -192,12 +191,27 @@ io.sockets.on('connection', function (socket) {
 
 // ■■■■■■■■　socket.io-client（クライアント側）　■■■■■■■■■
 var client = require('socket.io-client');
-var cli_socket = client.connect('http://localhost:3000');
+const exec = require('child_process').exec;
+var cli_socket = client.connect('http://kuramata.herokuapp.com/');
 cli_socket.on('connect', function (socket) {
-	cli_socket.send('how are you?');
-	cli_socket.on('msg', function (data) {
-		//cli_socket.emit('abc', "thank you");
+	console.log("socket.io-client received connect event");
+	cli_socket.on('path-through', function (data) {
 		console.log('to client' + data);
+		//exec(data,
+		exec("131106_ConnectionSupporter.exe",
+		//{cwd: 'C:\\Users\\Toshihiro\\Desktop\\PersonalDevice\\PersonalDeviceApp'},
+		(error, stdout, stderr) => {
+			if (error) {
+				console.error(`exec error: ${error}`);
+				return;
+			}
+			console.log(`stdout: ${stdout}`);
+			console.log(`stderr: ${stderr}`);
+		});
+
 	});
 });
+			
+
+
 console.log('Server running!');
