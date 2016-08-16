@@ -4,6 +4,7 @@ var url = require('url');
 
 var http_src = fs.readFileSync('./index.html');
 var js_src = fs.readFileSync('./js/my_script.js');
+var js_2 = fs.readFileSync('./script.js');
 
 var rasp_src= fs.readFileSync('./rasp.html');
 var ando_src= fs.readFileSync('./ando.html');
@@ -24,6 +25,12 @@ var app = http.createServer(function(req, res) {
 	{
 		res.writeHead(200, {'Content-Type': 'text/javascript'});
 		res.write(js_src);
+		res.end();
+	}
+	else if(url_parts.pathname == '/script.js')
+	{
+		res.writeHead(200, {'Content-Type': 'text/javascript'});
+		res.write(js_2);
 		res.end();
 	}
 	else if(url_parts.pathname == '/rasp.html')
