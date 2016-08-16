@@ -41,7 +41,7 @@ io.sockets.on('connection', function(socket) {
 	console.log("socket.io connected.");
 
 	socket.on('path-through', function(data) {
-		onsole.log();
+		console.log();
 		console.log("socket.io received 'path-through' event and '" + data + "' message from html");
 
 		// 受信データをHTMLへ送信
