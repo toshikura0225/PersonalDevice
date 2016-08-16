@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>rasp</title>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script type="text/javascript" src="http://127.0.0.1:8000/webiopi.js"></script>
+<script type="text/javascript">
+	
+	// .pyのマクロ名
+	var MACRO_NAME = "serialWrite";
+	
+	// socket.ioを仕様するHTMLのドメイン名
+	var HTML_DOMAIN = "http://denshi.herokuapp.com";
+	
+	// webiopiのloadイベント
+	webiopi().ready( function()
+	{	// Initialize
+		window.addEventListener('message', messageListener, false);	// postMessageされた
+		
+		// else if(window.attachEvent)
+        	// ～ IE8
+			// window.attachEvent("onload", eventFunc);
+	});
+	
+	// postMessageイベントリスナー（WEB→RP）
+	function messageListener( event )
+	{
+
+		webiopi().callMacro(MACRO_NAME, event.data, macroCallback);
+		//var abc = [50,51,52];
+		//webiopi().callMacro(MACRO_NAME, abc, macroCallback);
+	}
+	
+	// webiopi().callMacroのコールバック関数（RP→WEB）
+	function macroCallback( macro, args, data )
+	{
+		$('div').prepend(data + '<br/>');
+		var numArray = [];
+		data.split(',').forEach( function (str)
+		{
+			numArray.push(parseInt(str));
+		});
+		// pythonからの返り値をそのままNode.jsに返す
+		$('#idFrame')[0].contentWindow.postMessage(data, HTML_DOMAIN);
+	}
+	
+	// デバッグ用関数
+	function forDebug()
+	{
+		var abc = [50,51,52];
+		webiopi().callMacro(MACRO_NAME, abc, macroCallback);
+	}
+
+</script>
+</head>
+<body>
+	<button onclick="forDebug()">webiopi().callMacro(MACRO_NAME, "abcde", macroCallback);</button>
+	<br />
+	<div></div>
+	
+	<iframe id="idFrame" src="http://denshi.herokuapp.com/iframe.html" height=300 width=300>
+	
+
+</body>
+</html>

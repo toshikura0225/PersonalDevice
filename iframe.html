@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>modbus dummy INV</title>
+<script src="/socket.io/socket.io.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="./js/my_script.js"></script>
+<script type="text/javascript">
+	
+	var WebIOPi = "http://127.0.0.1:8000";
+	
+	// jQueryのreadyイベント
+	$(function(){
+    	
+		window.addEventListener('message', messageListener, false);	// postMessageされた
+		
+		// else if(window.attachEvent)
+        	// ～ IE8
+			// window.attachEvent("onload", eventFunc);
+		
+	});
+	
+	// postMessageイベントリスナー（RP→WEB）
+	function messageListener( event )
+	{
+		send( event.data );
+	}
+	
+	// socket.ioから受信したデータをRPへ渡す（WEB→RP）
+	function received(tag, data)
+	{
+		window.parent.postMessage(data, WebIOPi);
+	}
+	
+</script>
+</head>
+<body>
+	<button type="button" onclick="received('tagtagtag','datadatadata')">window.parent.postMessage('datadatadata' , WebIOPi);</button>
+<div></div>
+
+</body>
+</html>

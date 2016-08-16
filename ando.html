@@ -1,0 +1,72 @@
+ß<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1">
+	<title>遠隔操作側ソース 150328</title>
+	<script src="/socket.io/socket.io.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<script src="./js/my_script.js"></script>
+
+	<script type="text/javascript">
+		
+		// socket.io message received
+		function received(tag, data)
+		{
+			$('#idReceived').prepend(data + '<br>');
+			//alert(data);
+		}
+		
+		// send message
+		function sendSignal()
+		{
+			// 配列形式で送信する
+			var url = [4, 48, 48, 90, 90, 5];
+			
+			//var url = "andooooo";
+			send(url);
+		}
+	</script>
+	<style type="text/css">
+	body
+	{
+		margin: 7%;
+	}
+	
+	#idON
+	{
+		float: left;
+		font-size: x-large;
+		width: 45%;
+		height: 5em;
+	}
+	
+	#idSpace
+	{
+		float: left;
+		width: 10%;
+	}
+	
+	#idOFF
+	{
+		font-size: x-large;
+		float: left;
+		width:  45%;
+		height: 5em;
+	}
+	
+	#idReceived
+	{
+		clear: both;
+	}
+
+	</style>
+</head>
+<body>
+	<button id="idON" onclick="sendSignal()"> sendSignal() </button>
+	<div id="idSpace">　</div>
+	<button id="idOFF" onclick="sendSignal()"> sendSignal() </button>
+	<div id="idReceived"></div>
+	
+</body>
+</html>
