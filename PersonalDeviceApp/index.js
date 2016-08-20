@@ -90,7 +90,8 @@ cli_socket.on('connect', function (socket) {
 		console.log('to client' + data);
 		//exec(data,
 		//exec("131106_ConnectionSupporter.exe",
-		exec("ifconfig",
+		//exec("ifconfig",
+		exec("raspistill -o cam1.jpg",
 		//{cwd: 'C:\\Users\\Toshihiro\\Desktop\\PersonalDevice\\PersonalDeviceApp'},
 		function(error, stdout, stderr) {
 			if (error) {
