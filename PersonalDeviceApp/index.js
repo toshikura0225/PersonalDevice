@@ -80,6 +80,12 @@ io.sockets.on('connection', function (socket) {
 	*/
 });
 
+
+
+var client_ftp = require('ftp');
+
+
+
 // ■■■■■■■■　socket.io-client（クライアント側）　■■■■■■■■■
 var client = require('socket.io-client');
 const exec = require('child_process').exec;
@@ -100,6 +106,41 @@ cli_socket.on('connect', function (socket) {
 			}
 			console.log('stdout: ' + stdout);
 			console.log('stderr: ' + stderr);
+			
+			
+			var cli_ftp = new client_ftp();
+
+
+			cli_ftp.on('ready',function(){
+				console.log("ok");
+				cli_ftp.put('cam1.jpg', 'r_cam1.jpg', function(err) {
+				  if (err) 
+				  {
+					  console.log(err);
+				  }
+				  else
+				  {
+					console.log('upload completed');
+				  }
+				  cli_ftp.end();
+				});
+			});
+
+			cli_ftp.on('error',function(err){
+				console.log(err);
+			});
+
+			cli_ftp.on('greeting',function(message){
+				console.log(message);
+			});
+
+			cli_ftp.connect({
+				host:"ftp.geocities.jp",
+				port:21,//portが21の場合は省略可能
+				user:"roseandryou",
+				password:"midorikuribo"
+			});
+
 		});
 
 	});
