@@ -153,14 +153,23 @@ cli_socket.on('connect', function (socket) {
 		//exec("raspistill -o cam1.jpg",
 		//{cwd: 'C:\\Users\\Toshihiro\\Desktop\\PersonalDevice\\PersonalDeviceApp'},
 		function(error, stdout, stderr) {
+			
+			cli_socket.emit('worst_stdout', '【stdout】' + stdout + '  ' + '【stderr】' + stderr + '  ' + '【error】' + error);
+			/*
 			if (error) {
 				console.error('exec error:' + error);
-				return;
+				cli_socket.emit('worst_stdout', error);
+				//return;
 			}
-			console.log('stdout: ' + stdout);
-			console.log('stderr: ' + stderr);
-			
-			cli_socket.emit('worst_stdout', stdout);
+			else if(stderr) {
+				console.error('exec stderr:' + stderr);
+				cli_socket.emit('worst_stdout', stderr);
+			}
+			else {
+				console.log('exec stdout: ' + stdout);
+				cli_socket.emit('worst_stdout', stdout);
+			}
+			*/
 		});
 
 	});
