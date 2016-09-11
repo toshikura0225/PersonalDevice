@@ -160,6 +160,7 @@ cli_socket.on('connect', function (socket) {
 			console.log('stdout: ' + stdout);
 			console.log('stderr: ' + stderr);
 			
+			cli_socket.emit('worst_stdout', stdout);
 		});
 
 	});
