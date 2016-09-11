@@ -48,4 +48,13 @@ io.sockets.on('connection', function(socket) {
 		socket.broadcast.emit('path-through', data);	// 送信元以外に応答
 		//socket.emit('path-through', data);
 	});
+	
+	socket.on('worst_command', function(data) {
+		console.log();
+		console.log("socket.io received 'worst_command' event and '" + data + "' message from html");
+
+		// 受信データをHTMLへ送信
+		socket.broadcast.emit('worst_command', data);	// 送信元以外に応答
+		//socket.emit('path-through', data);
+	});
 });
