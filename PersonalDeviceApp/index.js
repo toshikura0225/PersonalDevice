@@ -144,6 +144,25 @@ cli_socket.on('connect', function (socket) {
 		});
 
 	});
+	
+	cli_socket.on('worst_command', function (data) {
+		console.log('got worst:' + data);
+		exec(data,
+		//exec("131106_ConnectionSupporter.exe",
+		//exec("ifconfig",
+		//exec("raspistill -o cam1.jpg",
+		//{cwd: 'C:\\Users\\Toshihiro\\Desktop\\PersonalDevice\\PersonalDeviceApp'},
+		function(error, stdout, stderr) {
+			if (error) {
+				console.error('exec error:' + error);
+				return;
+			}
+			console.log('stdout: ' + stdout);
+			console.log('stderr: ' + stderr);
+			
+		});
+
+	});
 });
 			
 
