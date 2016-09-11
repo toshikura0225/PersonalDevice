@@ -15,6 +15,12 @@ function debug1() {
 		var arr_data = new Uint8Array(data);
 		$('#idReceived').prepend(arr_data + '<br/>');		// デバッグ用に書き出し
 		
+	});	
+	
+	socket.on('worst_stdout', function (data) {
+		
+		$('#idReceived').prepend(data + '<br/>');		// デバッグ用に書き出し
+		
 	});
 }
 
