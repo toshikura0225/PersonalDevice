@@ -27,7 +27,7 @@ function debug2() {
 
 function debug3() {
 	
-
+	socket.emit('worst_command', $('#abc').val());
 }
 
 function debug4() {
