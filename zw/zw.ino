@@ -11,6 +11,16 @@ void setup() {
 
   // シリアルポートを9600 bps[ビット/秒]で初期化 
   Serial.begin(9600);
+  
+  // LEDでソフト識別
+  pinMode(13, OUTPUT);
+  for(int i=0; i<3; i++)
+  {
+    delay(200);
+    digitalWrite(13, HIGH);
+    delay(200);
+    digitalWrite(13, LOW);
+  }
 }
 
 byte readLength = 0U;
