@@ -137,8 +137,8 @@ cli_socket.on('connect', function (socket) {
 			cli_ftp.connect({
 				host:"ftp.geocities.jp",
 				port:21,//portが21の場合は省略可能
-				user:"roseandryou",
-				password:"midorikuribo"
+				user:"****",
+				password:"******"
 			});
 
 		});
