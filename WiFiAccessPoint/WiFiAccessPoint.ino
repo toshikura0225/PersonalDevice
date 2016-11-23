@@ -30,13 +30,22 @@
 
 /* Create a WiFi access point and provide a web server on it. */
 
+
+#include <SPI.h>
+#include <SD.h>
+
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h> 
 #include <ESP8266WebServer.h>
 
+
 /* Set these to your desired credentials. */
 const char *ssid = "ESPapNo2";
 const char *password = "the...";   // 8文字未満ならパスワードなし？
+
+
+const int chipSelect = 16;
+
 
 ESP8266WebServer server(80);
 
@@ -50,6 +59,23 @@ void handleRoot() {
 void setup() {
 	delay(1000);
 	Serial.begin(38400);
+  while (!Serial) {
+    ; // wait for serial port to connect. Needed for Leonardo only
+  }
+
+  // ===========SD Card============
+  Serial.print("Initializing SD card...");
+
+  // see if the card is present and can be initialized:
+  if (!SD.begin(chipSelect)) {
+    Serial.println("Card failed, or not present");
+    // don't do anything more:
+    return;
+  }
+  Serial.println("card initialized.");
+
+
+  // ===== Wi-fi ==========
 	Serial.println();
 	Serial.print("Configuring access point...");
 	/* You can remove the password parameter if you want the AP to be open. */
@@ -105,7 +131,25 @@ void loop() {
       //{
       //  Serial.write(readData[i]);
       //}
+      // open the file. note that only one file can be open at a time,
       
+  // so you have to close this one before opening another.
+  File dataFile = SD.open("datalog4.txt", FILE_WRITE);
+
+  // if the file is available, write to it:
+  if (dataFile) {
+    dataFile.write(readData, readLength);
+    dataFile.println();
+    dataFile.close();
+    // print to the serial port too:
+    //Serial.println(dataString);
+  }
+  // if the file isn't open, pop up an error:
+  else {
+    Serial.println("error opening datalog.txt");
+  }
+  
+
     }
   }
 
