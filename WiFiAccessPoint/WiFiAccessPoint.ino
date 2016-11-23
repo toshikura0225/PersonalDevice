@@ -36,7 +36,7 @@
 
 /* Set these to your desired credentials. */
 const char *ssid = "ESPapNo2";
-const char *password = "the1234567890";
+const char *password = "the...";   // 8文字未満ならパスワードなし？
 
 ESP8266WebServer server(80);
 
