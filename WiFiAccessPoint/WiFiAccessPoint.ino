@@ -30,10 +30,6 @@
 
 /* Create a WiFi access point and provide a web server on it. */
 
-
-#include <SPI.h>
-#include <SD.h>
-
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h> 
 #include <ESP8266WebServer.h>
@@ -44,7 +40,7 @@ const char *ssid = "ESPapNo2";
 const char *password = "the...";   // 8文字未満ならパスワードなし？
 
 
-const int chipSelect = 16;
+const int selectPin = 5;
 
 
 ESP8266WebServer server(80);
@@ -63,18 +59,6 @@ void setup() {
     ; // wait for serial port to connect. Needed for Leonardo only
   }
 
-  // ===========SD Card============
-  Serial.print("Initializing SD card...");
-
-  // see if the card is present and can be initialized:
-  if (!SD.begin(chipSelect)) {
-    Serial.println("Card failed, or not present");
-    // don't do anything more:
-    return;
-  }
-  Serial.println("card initialized.");
-
-
   // ===== Wi-fi ==========
 	Serial.println();
 	Serial.print("Configuring access point...");
@@ -89,68 +73,7 @@ void setup() {
 	Serial.println("HTTP server started");
 }
 
-int loopCount = 0;
-
-byte requestZW[] = {0x04, 0x30, 0x30, 0x5A, 0x57, 0x05};
-int readLength = 0;
-const int MAX_BUFFER = 2048;
-byte readData[MAX_BUFFER];
-
-const byte STX = 0x02;
-const byte ETX = 0x03;
-
 void loop() {
 	server.handleClient();
-
-  // 送信
-  if(loopCount >= 300000)
-  {
-    Serial.write(requestZW, 6);    
-
-    loopCount = 0;
-  }
-  else
-  {
-    loopCount++;
-  }
-
-  // 受信
-  if(Serial.available() > 0)
-  {
-    byte buf = Serial.read();
-
-    if(buf == STX)
-    {
-      readLength = 0;
-    }    
-    readData[readLength++] = buf;
-
-    if(buf == ETX)
-    {
-      //for(int i=0; i<readLength; i++)
-      //{
-      //  Serial.write(readData[i]);
-      //}
-      // open the file. note that only one file can be open at a time,
-      
-  // so you have to close this one before opening another.
-  File dataFile = SD.open("datalog4.txt", FILE_WRITE);
-
-  // if the file is available, write to it:
-  if (dataFile) {
-    dataFile.write(readData, readLength);
-    dataFile.println();
-    dataFile.close();
-    // print to the serial port too:
-    //Serial.println(dataString);
-  }
-  // if the file isn't open, pop up an error:
-  else {
-    Serial.println("error opening datalog.txt");
-  }
-  
-
-    }
-  }
 
 }
