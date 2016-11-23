@@ -1,2 +1,2 @@
 # PersonalDevice
-Raspberry Pi による汎用デバイスの作成
+Wifiモジュール による汎用デバイスの作成
