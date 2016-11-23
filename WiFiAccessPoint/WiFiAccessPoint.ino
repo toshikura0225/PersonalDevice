@@ -49,7 +49,7 @@ void handleRoot() {
 
 void setup() {
 	delay(1000);
-	Serial.begin(115200);
+	Serial.begin(38400);
 	Serial.println();
 	Serial.print("Configuring access point...");
 	/* You can remove the password parameter if you want the AP to be open. */
@@ -63,6 +63,50 @@ void setup() {
 	Serial.println("HTTP server started");
 }
 
+int loopCount = 0;
+
+byte requestZW[] = {0x04, 0x30, 0x30, 0x5A, 0x57, 0x05};
+int readLength = 0;
+const int MAX_BUFFER = 2048;
+byte readData[MAX_BUFFER];
+
+const byte STX = 0x02;
+const byte ETX = 0x03;
+
 void loop() {
 	server.handleClient();
+
+  // 送信
+  if(loopCount >= 300000)
+  {
+    Serial.write(requestZW, 6);    
+
+    loopCount = 0;
+  }
+  else
+  {
+    loopCount++;
+  }
+
+  // 受信
+  if(Serial.available() > 0)
+  {
+    byte buf = Serial.read();
+
+    if(buf == STX)
+    {
+      readLength = 0;
+    }    
+    readData[readLength++] = buf;
+
+    if(buf == ETX)
+    {
+      //for(int i=0; i<readLength; i++)
+      //{
+      //  Serial.write(readData[i]);
+      //}
+      
+    }
+  }
+
 }
