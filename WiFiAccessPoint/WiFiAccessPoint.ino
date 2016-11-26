@@ -34,14 +34,15 @@
 #include <WiFiClient.h> 
 #include <ESP8266WebServer.h>
 
+#include <SPI.h>
 
 /* Set these to your desired credentials. */
 const char *ssid = "ESPapNo2";
 const char *password = "the...";   // 8文字未満ならパスワードなし？
 
 
-const int selectPin = 5;
-
+//const int selectPin = 5;
+#define SS 5
 
 ESP8266WebServer server(80);
 
@@ -71,9 +72,38 @@ void setup() {
 	server.on("/", handleRoot);
 	server.begin();
 	Serial.println("HTTP server started");
+
+
+
+  // ===== SPI ========
+  SPI.begin();
+  SPI.setBitOrder(LSBFIRST);
+  SPI.setClockDivider(SPI_CLOCK_DIV4);
+  SPI.setDataMode(SPI_MODE1);
+  pinMode(SS, OUTPUT);
+  digitalWrite(SS, HIGH);
 }
 
+int count = 0;
 void loop() {
 	server.handleClient();
 
+  if(count >= 100000)
+  {
+    digitalWrite(SS, LOW);
+    SPI.transfer(1);
+    digitalWrite(SS, HIGH);
+    //delay(50);
+    count = 0;
+    
+  Serial.println("friend");
+  }
+  else
+  {
+    count++;
+  }
+}
+
+uint8_t bcdToDec(uint8_t value) {
+  return (uint8_t) ( (value/16*10) + (value%16) );
 }
