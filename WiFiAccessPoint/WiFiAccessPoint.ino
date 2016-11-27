@@ -42,7 +42,7 @@ const char *password = "the...";   // 8文字未満ならパスワードなし�
 
 
 //const int selectPin = 5;
-#define SS 5
+#define SS 4
 
 ESP8266WebServer server(80);
 
@@ -77,11 +77,13 @@ void setup() {
 
   // ===== SPI ========
   SPI.begin();
-  SPI.setBitOrder(LSBFIRST);
-  SPI.setClockDivider(SPI_CLOCK_DIV4);
+  //SPI.setBitOrder(LSBFIRST);
+  SPI.setBitOrder(MSBFIRST);
+  SPI.setClockDivider(SPI_CLOCK_DIV128);
   SPI.setDataMode(SPI_MODE1);
   pinMode(SS, OUTPUT);
   digitalWrite(SS, HIGH);
+
 }
 
 int count = 0;
@@ -91,12 +93,18 @@ void loop() {
   if(count >= 100000)
   {
     digitalWrite(SS, LOW);
-    SPI.transfer(1);
+    byte a = SPI.transfer(163);
+  //Serial.write(a);
+    byte b = SPI.transfer(163);
+    byte c = (b >> 1) & 15;
+    byte d = (b >> 5);
+    byte e = d * 10 + c;
+  Serial.write(c);
+  Serial.write(d);
     digitalWrite(SS, HIGH);
     //delay(50);
     count = 0;
     
-  Serial.println("friend");
   }
   else
   {
